@@ -37,6 +37,7 @@ describe('service', () => {
             name: 'example-service',
             region: 'europe-west1',
             image: 'gcr.io/cloudrun/hello',
+            port: 8080,
             env: {
                 XXX: '1'
             }

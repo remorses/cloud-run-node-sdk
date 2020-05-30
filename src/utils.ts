@@ -10,7 +10,7 @@ export function addZeros(num: any, len: number) {
     return num.slice(0, len)
 }
 
-export function removeUndefinedValues(x: Record<string, any>) {
+export function removeUndefinedValues<T extends Record<string, any>>(x: T): T {
     Object.keys(x).forEach((k) => {
         if (x[k] === undefined) {
             delete x[k]

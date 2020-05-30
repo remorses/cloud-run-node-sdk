@@ -6,22 +6,23 @@ import { addZeros, removeUndefinedValues } from './utils'
 import { admob } from 'googleapis/build/src/apis/admob'
 import { allowUnauthenticatedRequestsToService } from './allowUnauthenticated'
 
-export async function deploy(
-    this: CloudRunSdk,
-    p: {
-        // container: run_v1.Schema$Container
-        name: string
-        allowUnauthenticated?: boolean
-        projectId?: string
-        region: string
-        env?: Record<string, string>
-        image: string
-        args?: string[]
-        command?: string[]
-        port?: number
-        workingDir?: string
-    },
-) {
+interface DeployParams {
+    // container: run_v1.Schema$Container
+    name: string
+    allowUnauthenticated?: boolean
+    projectId?: string
+    region: string
+    env?: Record<string, string>
+    image: string
+    args?: string[]
+    command?: string[]
+    port?: number
+    workingDir?: string
+    memory?: string
+    cpu?: string
+}
+
+export async function deploy(this: CloudRunSdk, p: DeployParams) {
     const cloudrun = await this.getCloudRunClient()
     const projectId = p.projectId || this.options.projectId
     if (!projectId) {
@@ -40,7 +41,7 @@ export async function deploy(
     })
     let deployedService: run_v1.Schema$Service
     if (existingService) {
-        const service = updateService(existingService, { env, image })
+        const service = updateService(existingService, { ...p, env })
         console.log('updating service')
         let res = await cloudrun.namespaces.services.replaceService(
             {
@@ -52,14 +53,7 @@ export async function deploy(
         deployedService = res.data
     } else {
         console.log('creating new service')
-        const container: run_v1.Schema$Container = removeUndefinedValues({
-            image: p.image,
-            args: p.args && p.args,
-            command: p.command && p.command,
-            ports: p.port && [{ containerPort: p.port }],
-            workingDir: p.workingDir && p.workingDir,
-            env,
-        })
+
         const res = await cloudrun.namespaces.services.create(
             {
                 parent: `namespaces/${projectId}`,
@@ -78,7 +72,7 @@ export async function deploy(
                                 annotations: {},
                             },
                             spec: {
-                                containers: [container],
+                                containers: [makeContainer({ ...p, env })],
                             },
                         },
                     },
@@ -106,20 +100,41 @@ function generateRevisionName(name: string, objectGeneration: number): string {
     return out
 }
 
+function makeContainer(p: Omit<DeployParams, 'env' | 'name'> & { env }) {
+    const container: run_v1.Schema$Container = removeUndefinedValues({
+        image: p.image,
+        args: p.args && p.args,
+        command: p.command && p.command,
+        ports: p.port && [{ containerPort: p.port }],
+        workingDir: p.workingDir && p.workingDir,
+        env: p.env || [],
+        resources: {
+            limits: removeUndefinedValues({
+                memory: p.memory,
+                cpu: p.cpu,
+            }),
+        },
+    })
+    return container
+}
+
 function updateService(
     svc: run_v1.Schema$Service,
-    p: { env: run_v1.Schema$EnvVar[]; image },
+    p: Omit<DeployParams, 'name' | 'env'> & {
+        env: run_v1.Schema$EnvVar[]
+        image
+    },
 ) {
-    const { env, image } = p
-    svc.spec.template.spec.containers[0].env = mergeEnvs(
-        svc.spec.template.spec.containers[0].env || [],
-        env || [],
-    )
-
     // update container image
-    svc.spec.template.spec.containers[0].image = image
-
-    // update revision name
+    const containers = svc.spec.template.spec.containers
+    containers[0] = {
+        ...containers[0],
+        ...makeContainer(p),
+        env: mergeEnvs(
+            svc.spec.template.spec.containers[0].env || [],
+            p.env || [],
+        ),
+    }
     svc.spec.template.metadata.name = generateRevisionName(
         svc.metadata.name,
         svc.metadata.generation,
