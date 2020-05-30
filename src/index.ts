@@ -4,16 +4,18 @@ import to from 'await-to-js'
 import { deploy } from './deploy'
 import { allowUnauthenticatedRequestsToService } from './allowUnauthenticated'
 
-type Options = {
+type SdkOptions = {
     projectId?: string
+    keyFile?: string
+    credentials?: Record<string, any>
 }
 
 export class CloudRunSdk {
     protected cloudrun: run_v1.Run = null
 
-    protected options: Options
+    protected options: SdkOptions
 
-    constructor(options: Options) {
+    constructor(options: SdkOptions) {
         this.options = options
     }
 
@@ -27,9 +29,11 @@ export class CloudRunSdk {
         if (this.cloudrun) {
             return this.cloudrun
         }
+        const { credentials, keyFile } = this.options
         const auth = new google.auth.GoogleAuth({
             scopes: ['https://www.googleapis.com/auth/cloud-platform'],
-            // credentials,
+            credentials,
+            keyFile,
         })
         const authClient = await auth.getClient()
         this.cloudrun = new run_v1.Run({
