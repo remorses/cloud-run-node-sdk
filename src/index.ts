@@ -26,7 +26,7 @@ export class CloudRunSdk {
     }
 
     getService = getService
-    getServiceError = getServiceError
+    getServiceStatus = getServiceStatus
     deploy = deploy
     getServicesLogs = getServicesLogs
     getRequestsCountMetrics = getRequestsCountMetrics
@@ -108,7 +108,6 @@ async function getService(
     return res.data
 }
 
-
 // conditions: [
 //     {
 //         type: 'Ready',
@@ -126,10 +125,16 @@ async function getService(
 //         lastTransitionTime: '2020-05-30T22:22:02.777Z',
 //     },
 // ],
-async function getServiceError(
+
+type ServiceStatus = {
+    ready: boolean
+    error?: { message: string; reason: string; name: string }
+}
+
+async function getServiceStatus(
     this: CloudRunSdk,
     { name, region, projectId = '' },
-) {
+): Promise<ServiceStatus> {
     const service = await this.getService({
         name,
         region,
@@ -140,32 +145,23 @@ async function getServiceError(
     const ready = conditions.find((cond) => {
         return cond.type === 'Ready'
     })
-    const configurationsReady = conditions.find((cond) => {
-        return cond.type === 'ConfigurationsReady'
-    })
-    if (!ready || !configurationsReady) {
-        // TODO what is this
-        throw new Error(
-            `unexpected error, cannot find Ready or ConfigurationsReady cloud run conditions`,
-        )
-    }
     if (ready.status === 'False') {
         return {
-            ok: false,
-            reason: ready.reason,
-            message: ready.message,
-            ...ready,
+            ready: false,
+            error: {
+                reason: ready.reason,
+                name: ready.reason,
+                message: ready.message,
+            },
         }
     }
-    if (configurationsReady.status === 'False') {
+    if (ready.status === 'True') {
         return {
-            ok: false,
-            reason: configurationsReady.reason,
-            message: configurationsReady.message,
-            ...ready,
+            ready: true,
         }
     }
-    return null
+
+    return { ready: false }
 }
 
 export function getDefaultOptions(region) {

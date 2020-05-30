@@ -25,13 +25,14 @@ describe('service', () => {
         })
         assert.equal(data, null)
     })
-    it('getServiceErrors', async () => {
-        const data = await client.getServiceError({
+    it('getServiceStatus', async () => {
+        const { ready, error } = await client.getServiceStatus({
             name: 'errored',
             region: 'europe-west1',
         })
-        pretty(data)
-        assert.ok(data)
+        pretty(error)
+        assert.ok(error)
+        assert.ok(!ready)
     })
     it('deploy', async () => {
         const data = await client.deploy({
