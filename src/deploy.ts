@@ -141,6 +141,41 @@ function updateService(
     return svc
 }
 
+
+export async function allowUnauthenticatedRequestsToService(
+    this: CloudRunSdk,
+    { name, projectId, region },
+) {
+    const resource = `projects/${projectId}/locations/${region}/services/${name}`
+    const cloudrun = await this.getCloudRunClient()
+    const res = await cloudrun.projects.locations.services.getIamPolicy(
+        {
+            resource,
+        },
+        getDefaultOptions(region),
+    )
+
+    const policy = {
+        ...res.data,
+        bindings: [
+            ...(res.data?.bindings || []),
+            {
+                members: ['allUsers'],
+                role: 'roles/run.invoker',
+            },
+        ],
+    }
+    const setIamRes = await cloudrun.projects.locations.services.setIamPolicy(
+        {
+            resource,
+            requestBody: { policy },
+        },
+        getDefaultOptions(region),
+    )
+    return setIamRes.data
+}
+
+
 export function mergeEnvs(
     a: run_v1.Schema$EnvVar[],
     b: run_v1.Schema$EnvVar[],

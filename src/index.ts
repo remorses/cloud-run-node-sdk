@@ -5,8 +5,8 @@ import { MetricServiceClient as MetricServiceClientType } from '@google-cloud/mo
 
 // import { GoogleAuthOptions  } from 'googleapis/build/src/auth/googleauth'
 import to from 'await-to-js'
-import { deploy } from './deploy'
-import { allowUnauthenticatedRequestsToService } from './allowUnauthenticated'
+import { deploy, allowUnauthenticatedRequestsToService } from './deploy'
+
 import { getServicesLogs } from './logs'
 import { getRequestsCountMetrics, getRequestsLatencyMetrics } from './metrics'
 
