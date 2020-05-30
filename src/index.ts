@@ -34,7 +34,10 @@ export class CloudRunSdk {
     }
 }
 
-async function getService(this: CloudRunSdk, { name, region, projectId = '' }) {
+async function getService(
+    this: CloudRunSdk,
+    { name, region, projectId = '', throwIfDoesNotExists = false },
+): Promise<null | run_v1.Schema$Service> {
     projectId = projectId || this.options.projectId
     const run = await this.getCloudRunClient()
     const [err, res] = await to(
@@ -47,6 +50,13 @@ async function getService(this: CloudRunSdk, { name, region, projectId = '' }) {
             },
         ),
     )
+    if (
+        !throwIfDoesNotExists &&
+        err &&
+        err.message.trim().endsWith('does not exist.')
+    ) {
+        return null
+    }
     if (err || !res) {
         throw err
     }
@@ -57,7 +67,12 @@ async function getServiceErrors(
     this: CloudRunSdk,
     { name, region, projectId = '' },
 ) {
-    const service = await this.getService({ name, region, projectId })
+    const service = await this.getService({
+        name,
+        region,
+        projectId,
+        throwIfDoesNotExists: true,
+    })
     const conditions = service.status.conditions
     const ready = conditions.find((cond) => {
         return cond.type === 'Ready'

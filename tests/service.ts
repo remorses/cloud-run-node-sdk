@@ -8,9 +8,9 @@ describe('service', () => {
     })
     it('getService', async () => {
         const data = await client.getService({
-            name: 'cli-example-with-cli',
+            name: 'cli-example-with-clix',
             region: 'us-central1',
-        })
+        }).catch(e => console.log(e.name))
         pretty(data)
     })
     it('getServiceErrors', async () => {

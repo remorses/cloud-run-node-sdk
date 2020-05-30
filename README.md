@@ -1,1 +1,13 @@
-# nodejs-lib-template
+
+
+### to do
+
+- deployService
+- updateService
+
+- getServiceError
+
+- getServiceLogs
+
+- deleteService
+- getServiceMetrics
