@@ -31,5 +31,9 @@
         "mocha": "^6.1.4",
         "sucrase": "^3.12.1",
         "typescript": "^3.7.5"
+    },
+    "dependencies": {
+        "await-to-js": "^2.1.1",
+        "googleapis": "^51.0.0"
     }
 }
