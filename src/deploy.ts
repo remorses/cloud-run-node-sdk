@@ -42,9 +42,13 @@ export async function deploy(
     if (existingService) {
         const service = updateService(existingService, { env, image })
         console.log('updating service')
-        let res = await cloudrun.namespaces.services.replaceService({
-            requestBody: service,
-        })
+        let res = await cloudrun.namespaces.services.replaceService(
+            {
+                requestBody: service,
+                name: `namespaces/${projectId}/services/${name}`,
+            },
+            getDefaultOptions(region),
+        )
         deployedService = res.data
     } else {
         console.log('creating new service')
@@ -64,13 +68,13 @@ export async function deploy(
                     kind: 'Service',
                     metadata: {
                         annotations: {},
-                        name: p.name,
+                        name,
                         namespace: projectId,
                     },
                     spec: {
                         template: {
                             metadata: {
-                                name: generateRevisionName(p.name, 0),
+                                name: generateRevisionName(name, 0),
                                 annotations: {},
                             },
                             spec: {
@@ -80,19 +84,23 @@ export async function deploy(
                     },
                 },
             },
-            getDefaultOptions(p.region),
+            getDefaultOptions(region),
         )
         deployedService = res.data
     }
     const { allowUnauthenticated = true } = p
     if (allowUnauthenticated) {
-        await allowUnauthenticatedRequestsToService({ name, projectId, region })
+        await this.allowUnauthenticatedRequestsToService({
+            name,
+            projectId,
+            region,
+        })
     }
     return deployedService
 }
 
 function generateRevisionName(name: string, objectGeneration: number): string {
-    const num = addZeros(objectGeneration.toString(), 5)
+    const num = addZeros((objectGeneration + 1).toString(), 5)
     const random = uuidV4().toString().slice(0, 3)
     const out = name + '-' + num + '-' + random
     return out
@@ -104,8 +112,8 @@ function updateService(
 ) {
     const { env, image } = p
     svc.spec.template.spec.containers[0].env = mergeEnvs(
-        svc.spec.template.spec.containers[0].env,
-        env,
+        svc.spec.template.spec.containers[0].env || [],
+        env || [],
     )
 
     // update container image
@@ -119,6 +127,11 @@ function updateService(
     return svc
 }
 
-function mergeEnvs(a: run_v1.Schema$EnvVar[], b: run_v1.Schema$EnvVar[]) {
-    return a
+export function mergeEnvs(
+    a: run_v1.Schema$EnvVar[],
+    b: run_v1.Schema$EnvVar[],
+) {
+    let aNames = a.map((x) => x.name)
+    const missing = b.filter((x) => !aNames.includes(x.name))
+    return [...a, ...missing]
 }

@@ -2,6 +2,7 @@ import { run_v1, google, GoogleApis } from 'googleapis'
 // import { GoogleAuthOptions  } from 'googleapis/build/src/auth/googleauth'
 import to from 'await-to-js'
 import { deploy } from './deploy'
+import { allowUnauthenticatedRequestsToService } from './allowUnauthenticated'
 
 type Options = {
     projectId?: string
@@ -19,6 +20,8 @@ export class CloudRunSdk {
     getService = getService
     getServiceError = getServiceError
     deploy = deploy
+
+    protected allowUnauthenticatedRequestsToService = allowUnauthenticatedRequestsToService
 
     protected async getCloudRunClient() {
         if (this.cloudrun) {

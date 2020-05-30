@@ -1,6 +1,7 @@
 import { strict as assert } from 'assert'
 import { CloudRunSdk } from '../src'
 import { pretty, addZeros } from '../src/utils'
+import { mergeEnvs } from '../src/deploy'
 
 describe('service', () => {
     const client = new CloudRunSdk({
@@ -36,6 +37,9 @@ describe('service', () => {
             name: 'example-service',
             region: 'europe-west1',
             image: 'gcr.io/cloudrun/hello',
+            env: {
+                XXX: '1'
+            }
         })
         pretty(data)
         assert.ok(data)
