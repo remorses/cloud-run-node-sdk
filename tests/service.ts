@@ -55,6 +55,31 @@ describe('service', () => {
         pretty(data)
         assert.ok(data)
     })
+    it('getServicesLogs', async () => {
+        const data = await client.getServicesLogs({
+            from: dayjs().subtract(1, 'day').toDate(),
+            to: new Date(),
+            services: ['example-service'],
+        })
+        pretty(data)
+        assert.ok(data)
+    })
+    it('getRequestsCountMetrics', async () => {
+        const data = await client.getRequestsCountMetrics({
+            lastHours: 10,
+            services: ['example-service'],
+        })
+        pretty(data)
+        assert.ok(data)
+    })
+    it('getRequestsLatencyMetrics', async () => {
+        const data = await client.getRequestsLatencyMetrics({
+            lastHours: 10,
+            services: ['example-service'],
+        })
+        pretty(data)
+        assert.ok(data)
+    })
 })
 
 describe('utils', () => {

@@ -42,6 +42,13 @@
     through2 "^3.0.0"
     type-fest "^0.12.0"
 
+"@google-cloud/monitoring@^2.0.0":
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/@google-cloud/monitoring/-/monitoring-2.0.0.tgz#503b90d95da00b08ec3143bc6f6a708fa6cca98f"
+  integrity sha512-UDra+uru7sRPgf/JIMH0L3vPHsSuVay+dvBjp+qp5j6enj6XTc5ZZyANhxTO8aqon8Rr9h/wszaXSQjeFFi6bA==
+  dependencies:
+    google-gax "^2.1.0"
+
 "@google-cloud/paginator@^2.0.0":
   version "2.0.3"
   resolved "https://registry.yarnpkg.com/@google-cloud/paginator/-/paginator-2.0.3.tgz#c7987ad05d1c3ebcef554381be80e9e8da4e4882"
@@ -60,7 +67,7 @@
   resolved "https://registry.yarnpkg.com/@google-cloud/promisify/-/promisify-1.0.4.tgz#ce86ffa94f9cfafa2e68f7b3e4a7fad194189723"
   integrity sha512-VccZDcOql77obTnFh0TbNED/6ZbbmHDf8UMNnzO1d5g9V0Htfm4k5cllY8P1tJsRKC3zWYGRLaViiupcgVjBoQ==
 
-"@grpc/grpc-js@~1.0.3":
+"@grpc/grpc-js@~1.0.0", "@grpc/grpc-js@~1.0.3":
   version "1.0.4"
   resolved "https://registry.yarnpkg.com/@grpc/grpc-js/-/grpc-js-1.0.4.tgz#a858bca10ee1da24291f54931656bd5877686a55"
   integrity sha512-Qawt6HUrEmljQMPWnLnIXpcjelmtIAydi3M9awiG02WWJ1CmIvFEx4IOC1EsWUWUlabOGksRbpfvoIeZKFTNXw==
@@ -160,6 +167,18 @@
   integrity sha512-TcUlBem321DFQzBNuz8p0CLLKp0VvF/XH9E4KHNmgwyp4E3AfgI5cjiIVZWlbfThBop2qxFIh4+LeY6hVWWZ2w==
   dependencies:
     "@types/node" "*"
+
+"@types/lodash.flatten@^4.4.6":
+  version "4.4.6"
+  resolved "https://registry.yarnpkg.com/@types/lodash.flatten/-/lodash.flatten-4.4.6.tgz#b74c3267c87e44e603137d4621e8a9396b6551f5"
+  integrity sha512-omCBl4M8EJSmf2DZqh4/zwjgXQpzC7YO/PXTcG8rI9r7xun8CohrHeNx8HZRkqWc61uJfIaZop9MwJEXPVssHw==
+  dependencies:
+    "@types/lodash" "*"
+
+"@types/lodash@*":
+  version "4.14.154"
+  resolved "https://registry.yarnpkg.com/@types/lodash/-/lodash-4.14.154.tgz#069e3c703fdb264e67be9e03b20a640bc0198ecc"
+  integrity sha512-VoDZIJmg3P8vPEnTldLvgA+q7RkIbVkbYX4k0cAVFzGAOQwUehVgRHgIr2/wepwivDst/rVRqaiBSjCXRnoWwQ==
 
 "@types/long@^4.0.0", "@types/long@^4.0.1":
   version "4.0.1"
@@ -641,6 +660,26 @@ google-gax@^1.11.0:
     semver "^6.0.0"
     walkdir "^0.4.0"
 
+google-gax@^2.1.0:
+  version "2.4.0"
+  resolved "https://registry.yarnpkg.com/google-gax/-/google-gax-2.4.0.tgz#8a0f8e170b3b23f51e3e1e3b891b024c93758e17"
+  integrity sha512-//OQX4JcpUD5ke+GdvII22kbR4AerFdBOvEFgiCX3zn74ldY4K6Yiv4vjpX3Ud3M6nP1+6th81ROni1wXyWymQ==
+  dependencies:
+    "@grpc/grpc-js" "~1.0.0"
+    "@grpc/proto-loader" "^0.5.1"
+    "@types/long" "^4.0.0"
+    abort-controller "^3.0.0"
+    duplexify "^3.6.0"
+    google-auth-library "^6.0.0"
+    is-stream-ended "^0.1.4"
+    lodash.at "^4.6.0"
+    lodash.has "^4.5.2"
+    node-fetch "^2.6.0"
+    protobufjs "^6.9.0"
+    retry-request "^4.0.0"
+    semver "^6.0.0"
+    walkdir "^0.4.0"
+
 google-p12-pem@^2.0.0:
   version "2.0.4"
   resolved "https://registry.yarnpkg.com/google-p12-pem/-/google-p12-pem-2.0.4.tgz#036462394e266472632a78b685f0cc3df4ef337b"
@@ -876,6 +915,11 @@ lodash.camelcase@^4.3.0:
   resolved "https://registry.yarnpkg.com/lodash.camelcase/-/lodash.camelcase-4.3.0.tgz#b28aa6288a2b9fc651035c7711f65ab6190331a6"
   integrity sha1-soqmKIorn8ZRA1x3EfZathkDMaY=
 
+lodash.flatten@^4.4.0:
+  version "4.4.0"
+  resolved "https://registry.yarnpkg.com/lodash.flatten/-/lodash.flatten-4.4.0.tgz#f31c22225a9632d2bbf8e4addbef240aa765a61f"
+  integrity sha1-8xwiIlqWMtK7+OSt2+8kCqdlph8=
+
 lodash.has@^4.5.2:
   version "4.5.2"
   resolved "https://registry.yarnpkg.com/lodash.has/-/lodash.has-4.5.2.tgz#d19f4dc1095058cccbe2b0cdf4ee0fe4aa37c862"
@@ -1098,7 +1142,7 @@ process-nextick-args@~2.0.0:
   resolved "https://registry.yarnpkg.com/process-nextick-args/-/process-nextick-args-2.0.1.tgz#7820d9b16120cc55ca9ae7792680ae7dba6d7fe2"
   integrity sha512-3ouUOpQhtgrbOa17J7+uxOTpITYWaGP7/AhoR3+A+/1e9skrzelGi/dXzEYyvbxubEF6Wn2ypscTKiKJFFn1ag==
 
-protobufjs@^6.8.6, protobufjs@^6.8.9:
+protobufjs@^6.8.6, protobufjs@^6.8.9, protobufjs@^6.9.0:
   version "6.9.0"
   resolved "https://registry.yarnpkg.com/protobufjs/-/protobufjs-6.9.0.tgz#c08b2bf636682598e6fabbf0edb0b1256ff090bd"
   integrity sha512-LlGVfEWDXoI/STstRDdZZKb/qusoAWUnmLg9R8OLSO473mBLWHowx8clbX5/+mKDEI+v7GzjoK9tRPZMMcoTrg==

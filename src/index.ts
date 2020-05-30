@@ -1,11 +1,14 @@
 import { run_v1, google, GoogleApis } from 'googleapis'
 import { Logging } from '@google-cloud/logging'
+import { MetricServiceClient } from '@google-cloud/monitoring'
+import { MetricServiceClient as MetricServiceClientType } from '@google-cloud/monitoring/build/src/v3'
 
 // import { GoogleAuthOptions  } from 'googleapis/build/src/auth/googleauth'
 import to from 'await-to-js'
 import { deploy } from './deploy'
 import { allowUnauthenticatedRequestsToService } from './allowUnauthenticated'
 import { getServicesLogs } from './logs'
+import { getRequestsCountMetrics, getRequestsLatencyMetrics } from './metrics'
 
 type SdkOptions = {
     projectId?: string
@@ -26,6 +29,8 @@ export class CloudRunSdk {
     getServiceError = getServiceError
     deploy = deploy
     getServicesLogs = getServicesLogs
+    getRequestsCountMetrics = getRequestsCountMetrics
+    getRequestsLatencyMetrics = getRequestsLatencyMetrics
 
     protected allowUnauthenticatedRequestsToService = allowUnauthenticatedRequestsToService
 
@@ -60,6 +65,19 @@ export class CloudRunSdk {
         })
 
         return this.stackDriver
+    }
+
+    protected metricsClient: MetricServiceClientType
+    protected getMetricsClient(): MetricServiceClientType {
+        const { credentials, keyFile, projectId } = this.options
+        if (!this.metricsClient) {
+            this.metricsClient = new MetricServiceClient({
+                // projectId,
+                credentials,
+                keyFile,
+            })
+        }
+        return this.metricsClient
     }
 }
 
