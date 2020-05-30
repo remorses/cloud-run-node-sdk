@@ -145,6 +145,11 @@ async function getServiceStatus(
     const ready = conditions.find((cond) => {
         return cond.type === 'Ready'
     })
+    if (!ready) {
+        return {
+            ready: false,
+        }
+    }
     if (ready.status === 'False') {
         return {
             ready: false,
