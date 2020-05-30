@@ -1,6 +1,7 @@
 import { run_v1, google, GoogleApis } from 'googleapis'
 // import { GoogleAuthOptions  } from 'googleapis/build/src/auth/googleauth'
 import to from 'await-to-js'
+import { deploy } from './deploy'
 
 type Options = {
     projectId?: string
@@ -16,7 +17,8 @@ export class CloudRunSdk {
     }
 
     getService = getService
-    getServiceErrors = getServiceErrors
+    getServiceError = getServiceError
+    deploy = deploy
 
     protected async getCloudRunClient() {
         if (this.cloudrun) {
@@ -45,9 +47,7 @@ async function getService(
             {
                 name: `namespaces/${projectId}/services/${name}`,
             },
-            {
-                rootUrl: `https://${region}-run.googleapis.com`,
-            },
+            getDefaultOptions(region),
         ),
     )
     if (
@@ -63,7 +63,7 @@ async function getService(
     return res.data
 }
 
-async function getServiceErrors(
+async function getServiceError(
     this: CloudRunSdk,
     { name, region, projectId = '' },
 ) {
@@ -81,6 +81,7 @@ async function getServiceErrors(
         return cond.type === 'ConfigurationsReady'
     })
     if (!ready || !configurationsReady) {
+        // TODO what is this
         throw new Error(
             `unexpected error, cannot find Ready or ConfigurationsReady cloud run conditions`,
         )
@@ -96,15 +97,16 @@ async function getServiceErrors(
     if (configurationsReady.status === 'False') {
         return {
             ok: false,
-            reason: ready.reason,
-            message: ready.message,
+            reason: configurationsReady.reason,
+            message: configurationsReady.message,
             ...ready,
         }
     }
+    return null
+}
+
+export function getDefaultOptions(region) {
     return {
-        ok: true,
-        reason: 'Everything Ok',
-        message: ready.message || 'Deployed',
-        name,
+        rootUrl: `https://${region}-run.googleapis.com`,
     }
 }

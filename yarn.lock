@@ -7,10 +7,15 @@
   resolved "https://registry.yarnpkg.com/@types/mocha/-/mocha-5.2.7.tgz#315d570ccb56c53452ff8638738df60726d5b6ea"
   integrity sha512-NYrtPht0wGzhwe9+/idPaBB+TqkY9AhTvOLMkThm0IoEfLaiVQZwBwyJ5puCkO3AUCWrmcoePjp2mbFocKy4SQ==
 
-"@types/node@^12.0.7":
-  version "12.12.25"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-12.12.25.tgz#792c0afb798f1dd681dce9c4b4c431f7245a0a42"
-  integrity sha512-nf1LMGZvgFX186geVZR1xMZKKblJiRfiASTHw85zED2kI1yDKHDwTKMdkaCbTlXoRKlGKaDfYywt+V0As30q3w==
+"@types/node@^14.0.6":
+  version "14.0.6"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-14.0.6.tgz#f9e178b2da31a4b0ec60b64649e244c31ce18daf"
+  integrity sha512-FbNmu4F67d3oZMWBV6Y4MaPER+0EpE9eIYf2yaHhCWovc1dlXCZkqGX4NLHfVVr6umt20TNBdRzrNJIzIKfdbw==
+
+"@types/uuid@^8.0.0":
+  version "8.0.0"
+  resolved "https://registry.yarnpkg.com/@types/uuid/-/uuid-8.0.0.tgz#165aae4819ad2174a17476dbe66feebd549556c0"
+  integrity sha512-xSQfNcvOiE5f9dyd4Kzxbof1aTrLobL278pGLKOZI6esGfZ7ts9Ka16CzIN6Y8hFHE1C7jIBZokULhK1bOgjRw==
 
 abort-controller@^3.0.0:
   version "3.0.0"
@@ -827,7 +832,7 @@ url-template@^2.0.8:
   resolved "https://registry.yarnpkg.com/url-template/-/url-template-2.0.8.tgz#fc565a3cccbff7730c775f5641f9555791439f21"
   integrity sha1-/FZaPMy/93MMd19WQflVV5FDnyE=
 
-uuid@^8.0.0:
+uuid@^8.0.0, uuid@^8.1.0:
   version "8.1.0"
   resolved "https://registry.yarnpkg.com/uuid/-/uuid-8.1.0.tgz#6f1536eb43249f473abc6bd58ff983da1ca30d8d"
   integrity sha512-CI18flHDznR0lq54xBycOVmphdCYnQLKn8abKn7PXUiKUGdEd+/l9LWNJmugXel4hXq7S+RMNl34ecyC9TntWg==
