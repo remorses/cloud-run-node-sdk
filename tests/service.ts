@@ -2,6 +2,7 @@ import { strict as assert } from 'assert'
 import { CloudRunSdk } from '../src'
 import { pretty, addZeros } from '../src/utils'
 import { mergeEnvs } from '../src/deploy'
+import dayjs from 'dayjs'
 
 describe('service', () => {
     const client = new CloudRunSdk({
@@ -39,8 +40,17 @@ describe('service', () => {
             image: 'gcr.io/cloudrun/hello',
             port: 8080,
             env: {
-                XXX: '1'
-            }
+                XXX: '1',
+            },
+        })
+        pretty(data)
+        assert.ok(data)
+    })
+    it('getServicesLogs', async () => {
+        const data = await client.getServicesLogs({
+            from: dayjs().subtract(1, 'day').toDate(),
+            to: new Date(),
+            services: ['example-service'],
         })
         pretty(data)
         assert.ok(data)

@@ -1,8 +1,11 @@
 import { run_v1, google, GoogleApis } from 'googleapis'
+import { Logging } from '@google-cloud/logging'
+
 // import { GoogleAuthOptions  } from 'googleapis/build/src/auth/googleauth'
 import to from 'await-to-js'
 import { deploy } from './deploy'
 import { allowUnauthenticatedRequestsToService } from './allowUnauthenticated'
+import { getServicesLogs } from './logs'
 
 type SdkOptions = {
     projectId?: string
@@ -22,6 +25,7 @@ export class CloudRunSdk {
     getService = getService
     getServiceError = getServiceError
     deploy = deploy
+    getServicesLogs = getServicesLogs
 
     protected allowUnauthenticatedRequestsToService = allowUnauthenticatedRequestsToService
 
@@ -40,6 +44,22 @@ export class CloudRunSdk {
             auth: authClient,
         })
         return this.cloudrun
+    }
+
+    protected stackDriver: Logging
+    protected getStackDriverClient() {
+        const { credentials, keyFile, projectId } = this.options
+        if (this.stackDriver) {
+            return this.stackDriver
+        }
+
+        this.stackDriver = new Logging({
+            // projectId,
+            credentials,
+            keyFile,
+        })
+
+        return this.stackDriver
     }
 }
 
