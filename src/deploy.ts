@@ -23,53 +23,72 @@ export async function deploy(
     },
 ) {
     const cloudrun = await this.getCloudRunClient()
-
     const projectId = p.projectId || this.options.projectId
     if (!projectId) {
         throw new Error('missing projectId')
     }
-    const container: run_v1.Schema$Container = removeUndefinedValues({
-        image: p.image,
-        args: p.args && p.args,
-        command: p.command && p.command,
-        ports: p.port && [{ containerPort: p.port }],
-        workingDir: p.workingDir && p.workingDir,
-        env: Object.keys(p.env || {}).map((k) => ({
-            name: k,
-            value: p.env[k],
-        })),
+    const { name, region, image } = p
+    const env: run_v1.Schema$EnvVar[] = Object.keys(p.env || {}).map((k) => ({
+        name: k,
+        value: p.env[k],
+    }))
+    const existingService = await this.getService({
+        name,
+        region,
+        projectId,
+        throwIfDoesNotExists: false,
     })
-    const res = await cloudrun.namespaces.services.create(
-        {
-            parent: `namespaces/${projectId}`,
-            requestBody: {
-                apiVersion: 'serving.knative.dev/v1',
-                kind: 'Service',
-                metadata: {
-                    annotations: {},
-                    name: p.name,
-                    namespace: projectId,
-                },
-                spec: {
-                    template: {
-                        metadata: {
-                            name: generateRevisionName(p.name, 0),
-                            annotations: {},
-                        },
-                        spec: {
-                            containers: [container],
+    let deployedService: run_v1.Schema$Service
+    if (existingService) {
+        const service = updateService(existingService, { env, image })
+        console.log('updating service')
+        let res = await cloudrun.namespaces.services.replaceService({
+            requestBody: service,
+        })
+        deployedService = res.data
+    } else {
+        console.log('creating new service')
+        const container: run_v1.Schema$Container = removeUndefinedValues({
+            image: p.image,
+            args: p.args && p.args,
+            command: p.command && p.command,
+            ports: p.port && [{ containerPort: p.port }],
+            workingDir: p.workingDir && p.workingDir,
+            env,
+        })
+        const res = await cloudrun.namespaces.services.create(
+            {
+                parent: `namespaces/${projectId}`,
+                requestBody: {
+                    apiVersion: 'serving.knative.dev/v1',
+                    kind: 'Service',
+                    metadata: {
+                        annotations: {},
+                        name: p.name,
+                        namespace: projectId,
+                    },
+                    spec: {
+                        template: {
+                            metadata: {
+                                name: generateRevisionName(p.name, 0),
+                                annotations: {},
+                            },
+                            spec: {
+                                containers: [container],
+                            },
                         },
                     },
                 },
             },
-        },
-        getDefaultOptions(p.region),
-    )
-    const { allowUnauthenticated = true, name, region } = p
+            getDefaultOptions(p.region),
+        )
+        deployedService = res.data
+    }
+    const { allowUnauthenticated = true } = p
     if (allowUnauthenticated) {
         await allowUnauthenticatedRequestsToService({ name, projectId, region })
     }
-    return res.data
+    return deployedService
 }
 
 function generateRevisionName(name: string, objectGeneration: number): string {
@@ -77,4 +96,29 @@ function generateRevisionName(name: string, objectGeneration: number): string {
     const random = uuidV4().toString().slice(0, 3)
     const out = name + '-' + num + '-' + random
     return out
+}
+
+function updateService(
+    svc: run_v1.Schema$Service,
+    p: { env: run_v1.Schema$EnvVar[]; image },
+) {
+    const { env, image } = p
+    svc.spec.template.spec.containers[0].env = mergeEnvs(
+        svc.spec.template.spec.containers[0].env,
+        env,
+    )
+
+    // update container image
+    svc.spec.template.spec.containers[0].image = image
+
+    // update revision name
+    svc.spec.template.metadata.name = generateRevisionName(
+        svc.metadata.name,
+        svc.metadata.generation,
+    )
+    return svc
+}
+
+function mergeEnvs(a: run_v1.Schema$EnvVar[], b: run_v1.Schema$EnvVar[]) {
+    return a
 }
