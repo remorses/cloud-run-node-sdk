@@ -100,7 +100,9 @@ function generateRevisionName(name: string, objectGeneration: number): string {
     return out
 }
 
-function makeContainer(p: Omit<DeployParams, 'env' | 'name'> & { env }) {
+function makeContainer(
+    p: Omit<DeployParams, 'env' | 'name'> & { env: run_v1.Schema$EnvVar[] },
+) {
     const container: run_v1.Schema$Container = removeUndefinedValues({
         image: p.image,
         args: p.args && p.args,
