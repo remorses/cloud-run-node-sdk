@@ -1,10 +1,7 @@
-import { CloudRunSdk, getDefaultOptions } from '.'
-import { v4 as uuidV4 } from 'uuid'
 import { run_v1 } from 'googleapis'
-import { container } from 'googleapis/build/src/apis/container'
+import { v4 as uuidV4 } from 'uuid'
+import { CloudRunSdk, getDefaultOptions } from '.'
 import { addZeros, removeUndefinedValues } from './utils'
-import { admob } from 'googleapis/build/src/apis/admob'
-import { allowUnauthenticatedRequestsToService } from './allowUnauthenticated'
 
 interface DeployParams {
     // container: run_v1.Schema$Container
