@@ -108,6 +108,24 @@ async function getService(
     return res.data
 }
 
+
+// conditions: [
+//     {
+//         type: 'Ready',
+//         status: 'True',
+//         lastTransitionTime: '2020-05-30T22:22:02.777Z',
+//     },
+//     {
+//         type: 'ConfigurationsReady',
+//         status: 'True',
+//         lastTransitionTime: '2020-05-30T22:21:56.467Z',
+//     },
+//     {
+//         type: 'RoutesReady',
+//         status: 'True',
+//         lastTransitionTime: '2020-05-30T22:22:02.777Z',
+//     },
+// ],
 async function getServiceError(
     this: CloudRunSdk,
     { name, region, projectId = '' },
