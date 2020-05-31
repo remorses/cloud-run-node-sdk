@@ -1,13 +1,7 @@
-import * as dayjs from 'dayjs'
 import flatten from 'lodash.flatten'
-
-import monitoring from '@google-cloud/monitoring'
-import {
-    makeRequestsLatencyRequest,
-    timeSeriesToPoints,
-    makeRequestsCountRequest,
-} from './metricsRequests'
 import { CloudRunSdk } from '.'
+import { makeRequestsCountRequest, makeRequestsLatencyRequest, timeSeriesToPoints } from './metricsRequests'
+
 
 type MetricsOptions = {
     projectId?: string

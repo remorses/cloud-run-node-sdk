@@ -1,5 +1,7 @@
 import dayjs from 'dayjs'
 import { CloudRunSdk } from '.'
+
+
 const baseFilter = `resource.type=cloud_run_revision AND severity>=DEFAULT`
 
 export interface LoggedLine {

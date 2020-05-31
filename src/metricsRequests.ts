@@ -1,18 +1,3 @@
-import monitoring from '@google-cloud/monitoring'
-import * as dayjs from 'dayjs'
-import { flatten } from 'lodash'
-import { MetricServiceClient } from '@google-cloud/monitoring'
-
-export const makeServicesFilter = (serviceNames) => {
-    let filter = serviceNames
-        .map((serviceName) => `resource.labels.service_name="${serviceName}"`)
-        .join(' OR ')
-    if (filter) {
-        filter = `AND (${filter})`
-    }
-    return filter
-}
-
 export const makeRequestsLatencyRequest = ({
     name,
     alignmentPeriod = 60,
@@ -104,4 +89,14 @@ export const timeSeriesToPoints = (data: any): Point => {
             serviceName: data.resource.labels.service_name,
         }
     })
+}
+
+export const makeServicesFilter = (serviceNames) => {
+    let filter = serviceNames
+        .map((serviceName) => `resource.labels.service_name="${serviceName}"`)
+        .join(' OR ')
+    if (filter) {
+        filter = `AND (${filter})`
+    }
+    return filter
 }

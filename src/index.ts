@@ -1,12 +1,9 @@
 import { run_v1, google, GoogleApis } from 'googleapis'
+import to from 'await-to-js'
 import { Logging } from '@google-cloud/logging'
 import { MetricServiceClient } from '@google-cloud/monitoring'
 import { MetricServiceClient as MetricServiceClientType } from '@google-cloud/monitoring/build/src/v3'
-
-// import { GoogleAuthOptions  } from 'googleapis/build/src/auth/googleauth'
-import to from 'await-to-js'
 import { allowUnauthenticatedRequestsToService, deployService } from './deploy'
-
 import { getServicesLogs } from './logs'
 import { getRequestsCountMetrics, getRequestsLatencyMetrics } from './metrics'
 import { deleteService } from './delete'
