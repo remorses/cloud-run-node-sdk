@@ -4,27 +4,9 @@ import { pretty, addZeros } from '../src/utils'
 import { mergeEnvs } from '../src/deploy'
 import dayjs from 'dayjs'
 
-describe('service', () => {
+describe('complete lifecycle', () => {
     const client = new CloudRunSdk({
         projectId: 'molten-enigma-261612',
-    })
-
-    it('getServiceStatus with error', async () => {
-        const { ready, error } = await client.getServiceStatus({
-            name: 'errored',
-            region: 'europe-west1',
-        })
-        pretty(error)
-        assert.ok(error)
-        assert.ok(!ready)
-    })
-
-    it('getService not exist returns null', async () => {
-        const data = await client.getService({
-            name: 'non-existent-service',
-            region: 'us-central1',
-        })
-        assert.equal(data, null)
     })
 
     // complete lifecycle
@@ -103,12 +85,5 @@ describe('service', () => {
         })
         pretty(data)
         assert.ok(data)
-    })
-})
-
-describe('utils', () => {
-    it('addZeros', () => {
-        assert.equal(addZeros(1, 5), '00001')
-        assert.equal(addZeros('xxx', 5), '00xxx')
     })
 })
