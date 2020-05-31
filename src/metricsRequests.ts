@@ -92,6 +92,7 @@ export const timeSeriesToPoints = (data: any): Point => {
 }
 
 export const makeServicesFilter = (serviceNames) => {
+    // TODO add metrics filtering annotations support
     let filter = serviceNames
         .map((serviceName) => `resource.labels.service_name="${serviceName}"`)
         .join(' OR ')
