@@ -1,11 +1,13 @@
 {
-    "name": "nodejs-lib-template",
+    "name": "cloud-run-node-sdk",
     "_": "[bump]",
     "version": "0.0.1",
-    "description": "",
+    "description": "Google Cloud Run client for nodejs",
     "main": "dist/index.js",
-    "module": "esm/index.js",
     "types": "dist/index.d.ts",
+    "repository": {
+        "url": "https://github.com/remorses/cloud-run-node-sdk"
+    },
     "mocha": {
         "require": "tests/init.js",
         "spec": "tests/**.ts",
