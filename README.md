@@ -21,7 +21,7 @@ const client = new CloudRunSdk({
 })
 const data = await client.deployService({
     name: 'name',
-    region: 'us-central1,
+    region: 'us-central1',
     image: 'gcr.io/cloudrun/hello',
     port: 8080,
     env: {
@@ -29,8 +29,8 @@ const data = await client.deployService({
     },
 })
 const error = await client.waitServiceReady({
-    name,
-    region,
+    name: 'example,
+    region: 'us-central1,
 })
 ```
 
@@ -42,7 +42,7 @@ const client = new CloudRunSdk({
     projectId: 'proj-id',
 })
 const logs = await client.getServicesLogs({
-    from: dayjs().subtract(1, 'day').toDate(),
+    from: new Date(new Date().getTime() - 3600),
     to: new Date(),
     services: ['example-service'],
 })
@@ -64,12 +64,12 @@ const client = new CloudRunSdk({
     projectId: 'proj-id',
 })
 const data = await client.getService({
-    name,
-    region,
+    name: 'example,
+    region: 'us-central1,
 })
 console.log('url', data.status.url)
 const { ready, error } = await client.getServiceStatus({
-    name,
-    region,
+    name: 'example,
+    region: 'us-central1,
 })
 ```

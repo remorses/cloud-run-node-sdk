@@ -1,8 +1,7 @@
 import { strict as assert } from 'assert'
-import { CloudRunSdk } from '../src'
-import { pretty, addZeros } from '../src/utils'
-import { mergeEnvs } from '../src/deploy'
 import dayjs from 'dayjs'
+import { CloudRunSdk } from '../src'
+import { pretty } from '../src/utils'
 
 describe('complete lifecycle', () => {
     const client = new CloudRunSdk({
@@ -62,7 +61,7 @@ describe('complete lifecycle', () => {
         const data = await client.getServicesLogs({
             from: dayjs().subtract(1, 'day').toDate(),
             to: new Date(),
-            services: ['example-service'],
+            services: [name],
         })
         pretty(data)
         assert.ok(data)
@@ -70,7 +69,7 @@ describe('complete lifecycle', () => {
     it('getRequestsCountMetrics', async () => {
         const data = await client.getRequestsCountMetrics({
             lastHours: 10,
-            services: ['example-service'],
+            services: [name],
         })
         pretty(data)
         assert.ok(data)
@@ -78,15 +77,15 @@ describe('complete lifecycle', () => {
     it('getRequestsLatencyMetrics', async () => {
         const data = await client.getRequestsLatencyMetrics({
             lastHours: 10,
-            services: ['example-service'],
+            services: [name],
         })
         pretty(data)
         assert.ok(data)
     })
     it('delete', async () => {
         const data = await client.deleteService({
-            name: 'example-service',
-            region: 'europe-west1',
+            name,
+            region,
         })
         pretty(data)
         assert.ok(data)
