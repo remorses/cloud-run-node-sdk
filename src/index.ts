@@ -10,6 +10,7 @@ import { allowUnauthenticatedRequestsToService, deployService } from './deploy'
 import { getServicesLogs } from './logs'
 import { getRequestsCountMetrics, getRequestsLatencyMetrics } from './metrics'
 import { deleteService } from './delete'
+import { waitReady } from './waitReady.ts'
 
 type SdkOptions = {
     projectId?: string
@@ -31,6 +32,7 @@ export class CloudRunSdk {
     getRequestsCountMetrics = getRequestsCountMetrics
     getRequestsLatencyMetrics = getRequestsLatencyMetrics
     deleteService = deleteService
+    waitServiceReady = waitReady
 
     protected allowUnauthenticatedRequestsToService = allowUnauthenticatedRequestsToService
 

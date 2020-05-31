@@ -37,6 +37,7 @@
         "@google-cloud/monitoring": "^2.0.0",
         "@types/lodash.flatten": "^4.4.6",
         "@types/uuid": "^8.0.0",
+        "await-sleep": "^0.0.1",
         "await-to-js": "^2.1.1",
         "dayjs": "^1.8.28",
         "googleapis": "^51.0.0",
