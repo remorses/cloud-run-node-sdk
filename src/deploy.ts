@@ -17,6 +17,7 @@ interface DeployParams {
     workingDir?: string
     memory?: string
     cpu?: string
+    annotations?: Record<string, string>
 }
 
 export async function deployService(this: CloudRunSdk, p: DeployParams) {
@@ -25,7 +26,7 @@ export async function deployService(this: CloudRunSdk, p: DeployParams) {
     if (!projectId) {
         throw new Error('missing projectId')
     }
-    const { name, region, image } = p
+    const { name, region } = p
     const env: run_v1.Schema$EnvVar[] = Object.keys(p.env || {}).map((k) => ({
         name: k,
         value: p.env[k],
@@ -58,17 +59,15 @@ export async function deployService(this: CloudRunSdk, p: DeployParams) {
                     apiVersion: 'serving.knative.dev/v1',
                     kind: 'Service',
                     metadata: {
-                        annotations: {},
+                        annotations: p.annotations || {},
                         name,
                         namespace: projectId,
-
                     },
                     spec: {
                         template: {
                             metadata: {
                                 name: generateRevisionName(name, 0),
                                 annotations: {},
-
                             },
                             spec: {
                                 containers: [makeContainer({ ...p, env })],
@@ -143,7 +142,6 @@ function updateService(
     return svc
 }
 
-
 export async function allowUnauthenticatedRequestsToService(
     this: CloudRunSdk,
     { name, projectId, region },
@@ -176,7 +174,6 @@ export async function allowUnauthenticatedRequestsToService(
     )
     return setIamRes.data
 }
-
 
 export function mergeEnvs(
     a: run_v1.Schema$EnvVar[],

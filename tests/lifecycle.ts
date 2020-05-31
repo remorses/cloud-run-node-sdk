@@ -22,6 +22,9 @@ describe('complete lifecycle', () => {
             env: {
                 CIAO: '1',
             },
+            annotations: {
+                'cloud-run-node-sdk': 'true',
+            },
         })
         pretty(data)
         assert.ok(data)
@@ -51,6 +54,8 @@ describe('complete lifecycle', () => {
         })
         pretty(data)
         assert.ok(data)
+        console.log('url', data.status.url)
+        // console.log('status', data.status)
     })
 
     it('getServicesLogs', async () => {

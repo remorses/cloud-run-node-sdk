@@ -67,6 +67,7 @@ const data = await client.getService({
     name,
     region,
 })
+console.log('url', data.status.url)
 const { ready, error } = await client.getServiceStatus({
     name,
     region,
