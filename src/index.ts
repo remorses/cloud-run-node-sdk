@@ -10,7 +10,7 @@ import { allowUnauthenticatedRequestsToService, deployService } from './deploy'
 import { getServicesLogs } from './logs'
 import { getRequestsCountMetrics, getRequestsLatencyMetrics } from './metrics'
 import { deleteService } from './delete'
-import { waitReady } from './waitReady.ts'
+import { waitReady } from './waitReady'
 
 type SdkOptions = {
     projectId?: string

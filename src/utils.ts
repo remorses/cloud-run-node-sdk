@@ -1,8 +1,5 @@
 export const pretty = (x) => console.log(JSON.stringify(x, null, 4))
 
-
-
-
 export function addZeros(num: any, len: number) {
     const cur = num.toString().split('').length
     if (cur < len) {
