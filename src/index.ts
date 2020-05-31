@@ -5,10 +5,11 @@ import { MetricServiceClient as MetricServiceClientType } from '@google-cloud/mo
 
 // import { GoogleAuthOptions  } from 'googleapis/build/src/auth/googleauth'
 import to from 'await-to-js'
-import { deploy, allowUnauthenticatedRequestsToService } from './deploy'
+import { allowUnauthenticatedRequestsToService, deployService } from './deploy'
 
 import { getServicesLogs } from './logs'
 import { getRequestsCountMetrics, getRequestsLatencyMetrics } from './metrics'
+import { deleteService } from './delete'
 
 type SdkOptions = {
     projectId?: string
@@ -17,8 +18,6 @@ type SdkOptions = {
 }
 
 export class CloudRunSdk {
-    protected cloudrun: run_v1.Run = null
-
     protected options: SdkOptions
 
     constructor(options: SdkOptions) {
@@ -27,13 +26,15 @@ export class CloudRunSdk {
 
     getService = getService
     getServiceStatus = getServiceStatus
-    deploy = deploy
+    deployService = deployService
     getServicesLogs = getServicesLogs
     getRequestsCountMetrics = getRequestsCountMetrics
     getRequestsLatencyMetrics = getRequestsLatencyMetrics
+    deleteService = deleteService
 
     protected allowUnauthenticatedRequestsToService = allowUnauthenticatedRequestsToService
 
+    protected cloudrun: run_v1.Run
     protected async getCloudRunClient() {
         if (this.cloudrun) {
             return this.cloudrun
@@ -128,7 +129,7 @@ async function getService(
 
 type ServiceStatus = {
     ready: boolean
-    error?: { message: string; reason: string; name: string }
+    error?: undefined | Omit<Error, 'stack'>
 }
 
 async function getServiceStatus(
@@ -154,7 +155,6 @@ async function getServiceStatus(
         return {
             ready: false,
             error: {
-                reason: ready.reason,
                 name: ready.reason,
                 message: ready.message,
             },

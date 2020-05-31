@@ -35,7 +35,7 @@ describe('service', () => {
         assert.ok(!ready)
     })
     it('deploy', async () => {
-        const data = await client.deploy({
+        const data = await client.deployService({
             name: 'example-service',
             region: 'europe-west1',
             image: 'gcr.io/cloudrun/hello',
@@ -47,11 +47,10 @@ describe('service', () => {
         pretty(data)
         assert.ok(data)
     })
-    it('getServicesLogs', async () => {
-        const data = await client.getServicesLogs({
-            from: dayjs().subtract(1, 'day').toDate(),
-            to: new Date(),
-            services: ['example-service'],
+    it('delete', async () => {
+        const data = await client.deleteService({
+            name: 'example-service',
+            region: 'europe-west1',
         })
         pretty(data)
         assert.ok(data)

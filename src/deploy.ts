@@ -19,7 +19,7 @@ interface DeployParams {
     cpu?: string
 }
 
-export async function deploy(this: CloudRunSdk, p: DeployParams) {
+export async function deployService(this: CloudRunSdk, p: DeployParams) {
     const cloudrun = await this.getCloudRunClient()
     const projectId = p.projectId || this.options.projectId
     if (!projectId) {
@@ -61,12 +61,14 @@ export async function deploy(this: CloudRunSdk, p: DeployParams) {
                         annotations: {},
                         name,
                         namespace: projectId,
+
                     },
                     spec: {
                         template: {
                             metadata: {
                                 name: generateRevisionName(name, 0),
                                 annotations: {},
+
                             },
                             spec: {
                                 containers: [makeContainer({ ...p, env })],
